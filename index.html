@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fahad's Valentine Surprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #ffe5ec;
+            --envelope-main: #ffb7c5;
+            --envelope-flap: #f896b1;
+            --highlight: #ff4d6d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'Poppins', sans-serif; overflow: hidden; transition: background 1s ease;
+        }
+
+        /* --- STYLISH POPUP (New) --- */
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 20000;
+            display: none; /* Hidden by default */
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(5px); /* Blurs background */
+        }
+        
+        .popup-box {
+            background: #fff0f3;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 320px;
+            width: 85%;
+            box-shadow: 0 15px 40px rgba(255, 77, 109, 0.4);
+            border: 3px solid #ffb7c5;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .popup-box h3 {
+            color: #d90429;
+            font-family: 'Pacifico', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .popup-box p {
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .popup-btn {
+            background: #ff4d6d; color: white; border: none;
+            padding: 10px 25px; border-radius: 50px;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+            transition: transform 0.2s;
+        }
+        .popup-btn:active { transform: scale(0.95); }
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff0f3; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .login-box {
+            background: #fff; padding: 30px; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;
+        }
+        .login-box h2 { color: #ff4d6d; font-family: 'Pacifico', cursive; margin-bottom: 20px; }
+        .pass-input {
+            padding: 10px; border: 2px solid #ffb7c5; border-radius: 5px;
+            font-size: 1rem; outline: none; width: 200px; text-align: center;
+        }
+        .enter-btn {
+            margin-top: 15px; padding: 10px 25px; background: #ff4d6d;
+            color: white; border: none; border-radius: 20px; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
+        }
+        .enter-btn:hover { background: #d90429; }
+
+        /* --- MAIN STYLES --- */
+        .bg-hearts { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .heart { position: absolute; bottom: -50px; animation: float 10s linear infinite; opacity: 0.6; }
+        @keyframes float { to { transform: translateY(-110vh) rotate(360deg); } }
+
+        .music-btn {
+            position: fixed; top: 20px; right: 20px; width: 45px; height: 45px;
+            background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 1000; font-size: 1.2rem;
+            animation: pulse 2s infinite; display: none;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        #menu-screen { text-align: center; width: 100%; max-width: 800px; z-index: 100; transition: 0.5s; padding: 20px; display: none; }
+        .title-container h1 { font-family: 'Pacifico', cursive; font-size: 2.5rem; color: #d90429; text-shadow: 2px 2px 0 #fff; margin-bottom: 5px; }
+        #love-timer { font-size: 0.9rem; background: rgba(255,255,255,0.7); padding: 8px 15px; border-radius: 20px; display: inline-block; margin-bottom: 25px; color: #d90429; font-weight: 600; }
+        
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; padding-bottom: 20px; }
+        .card { background: rgba(255,255,255,0.9); border-radius: 15px; padding: 15px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; text-align: center; border-bottom: 4px solid transparent; position: relative;}
+        .card:hover { transform: translateY(-5px); border-bottom: 4px solid var(--highlight); background: #fff; }
+        .icon { font-size: 2.2rem; display: block; margin-bottom: 5px; }
+        .locked-badge { position: absolute; top: 5px; right: 5px; font-size: 1rem; }
+
+        #letter-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 200; }
+        .back-btn { position: absolute; top: 20px; left: 20px; background: #fff; padding: 8px 15px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; }
+
+        .envelope-wrapper { position: relative; display: flex; justify-content: center; align-items: center; }
+        .envelope { position: relative; width: 300px; height: 200px; background: var(--envelope-main); box-shadow: 0 20px 40px rgba(0,0,0,0.3); cursor: pointer; transition: 0.8s; z-index: 10; }
+        .flap { position: absolute; top: 0; width: 100%; height: 100%; background: var(--envelope-flap); clip-path: polygon(0 0, 100% 0, 50% 50%); transform-origin: top; transition: 0.5s; z-index: 11; }
+        .envelope.open .flap { transform: rotateX(180deg); }
+        .envelope.open { transform: translateY(200px) scale(0); opacity: 0; }
+        
+        .letter-card { position: absolute; width: 340px; height: 580px; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transform: scale(0); transition: 0.6s ease-back; display: flex; flex-direction: column; overflow-y: auto; }
+        .letter-card.show { transform: scale(1); }
+        .photo-frame { background: #fff; padding: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transform: rotate(-2deg); margin: 10px 0 20px 0; border: 1px solid #eee; flex-shrink: 0; }
+        .photo-frame img { width: 100%; height: 220px; object-fit: cover; border-radius: 4px; display: block; }
+        .content { font-family: 'Dancing Script', cursive; color: #444; text-align: left; padding: 0 10px; }
+        .day-title { font-family: 'Pacifico', cursive; color: var(--highlight); text-align: center; font-size: 1.8rem; margin-bottom: 15px; }
+        .message-text { font-size: 1.3rem; line-height: 1.5; min-height: 100px; }
+        .cursor { display: inline-block; width: 2px; height: 1.2rem; background: #444; animation: blinkCur 0.8s infinite; }
+        @keyframes blinkCur { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+    <div class="bg-hearts" id="heartContainer"></div>
+    <div class="music-btn" onclick="toggleMusic()">🎵</div>
+
+    <div id="custom-popup" class="popup-overlay">
+        <div class="popup-box">
+            <h3>No Cheating! 🙈</h3>
+            <p id="popup-message">Ye din abhi nahi aaya hai.</p>
+            <button class="popup-btn" onclick="closePopup()">Okay, I'll wait 😇</button>
+        </div>
+    </div>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>Love Login ❤️</h2>
+            <p style="margin-bottom: 10px; color: #666;">Enter the secret password</p>
+            <input type="password" id="password" class="pass-input" placeholder="Password...">
+            <br>
+            <button class="enter-btn" onclick="checkPassword()">Unlock My Heart</button>
+            <p id="error-msg" style="color: red; font-size: 0.8rem; margin-top: 10px; display: none;">Wrong Password! Try again.</p>
+        </div>
+    </div>
+
+    <div id="menu-screen">
+        <div class="title-container">
+            <h1>Valentine Week ❤️</h1>
+            <div id="love-timer">Calculating...</div>
+        </div>
+        <div class="grid-container" id="grid"></div>
+    </div>
+
+    <div id="letter-screen">
+        <button class="back-btn" onclick="goBack()">⬅ Back</button>
+        <div class="envelope-wrapper">
+            <div class="envelope" id="env" onclick="openEnvelope()">
+                <div class="flap"></div>
+            </div>
+            <div class="letter-card" id="finalLetter">
+                <div class="photo-frame"><img id="day-photo" src="" alt="Memory"></div>
+                <div class="content">
+                    <div class="day-title" id="day-title">Title</div>
+                    <div class="message-text"><span id="typewriter-text"></span><span class="cursor"></span></div>
+                    <p style="text-align: right; margin-top: 20px; font-weight: bold; font-size: 1.5rem;">- Yours, Fahad</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === PASSWORD SETUP ===
+        const SECRET_PASS = "Fahad"; // Password
+
+        // === DATE SETUP (8 April 2025) ===
+        const startDate = new Date(2025, 3, 8); 
+
+        // Year 2026 ke liye Dates
+        const days = [
+            { id: 7, name: "Rose Day", date: "Feb 7", icon: "🌹", color: "#e01e37", title: "My Beautiful Rose",
+              image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400",
+              msg: "Phool to bohot hain, par tumsa pyaara koi nahi. Tum meri zindagi ka wo gulaab ho jo kabhi murjhata nahi." },
+
+            { id: 8, name: "Propose Day", date: "Feb 8", icon: "💍", color: "#ff4d6d", title: "Will You Be Mine?",
+              image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=400",
+              msg: "Mera dil sirf tumhare liye dhadakta hai. Kya tum humesha ke liye meri banogi? I want to grow old with you." },
+
+            { id: 9, name: "Chocolate Day", date: "Feb 9", icon: "🍫", color: "#5d4037", title: "Sweeter Than Candy",
+              image: "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=400",
+              msg: "Chocolate ki mithaas se bhi zyada mithi hai tumhari awaaz. Life is delicious with you!" },
+
+            { id: 10, name: "Teddy Day", date: "Feb 10", icon: "🧸", color: "#ff8fab", title: "My Cute Teddy",
+              image: "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=400",
+              msg: "Tum meri pyari si teddy ho. Jab bhi miss karun, bas tumhe gale lagane ka mann karta hai." },
+
+            { id: 11, name: "Promise Day", date: "Feb 11", icon: "🤞", color: "#0077b6", title: "A Promise Forever",
+              image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400",
+              msg: "Aaj wada karta hoon, chahe kuch bhi ho, main hamesha tumhara haath pakad kar chalunga. I won't let go." },
+
+            { id: 12, name: "Hug Day", date: "Feb 12", icon: "🤗", color: "#fb8500", title: "Warmest Hugs",
+              image: "https://images.unsplash.com/photo-1517852058149-82c75b0d7429?w=400",
+              msg: "Tumhare gale lagkar jo sukoon milta hai, wo puri duniya mein kahin nahi. Sending you a tight hug!" },
+
+            { id: 13, name: "Kiss Day", date: "Feb 13", icon: "💋", color: "#d90429", title: "Sealed With A Kiss",
+              image: "https://images.unsplash.com/photo-1514315384763-ba401779410f?w=400",
+              msg: "Hawaon mein aaj alag hi nasha hai. Sending you a million kisses today to show how much I love you." },
+
+            { id: 14, name: "Valentine's Day", date: "Feb 14", icon: "❤️", color: "#ff0a54", title: "My Forever Valentine",
+              image: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=400",
+              msg: "Tum ho to main hoon. Meri har khushi tumse shuru hoti hai. Happy Valentine's Day Jaan! I Love You." }
+        ];
+
+        // === PASSWORD FUNCTION ===
+        function checkPassword() {
+            const input = document.getElementById('password').value;
+            if (input === SECRET_PASS) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('menu-screen').style.display = 'block';
+                document.querySelector('.music-btn').style.display = 'flex';
+                document.getElementById('bgMusic').play().catch(() => console.log("Click music btn manually"));
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        // === POPUP FUNCTIONS (NEW) ===
+        function showPopup(msg) {
+            document.getElementById('popup-message').innerHTML = msg;
+            document.getElementById('custom-popup').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('custom-popup').style.display = 'none';
+        }
+
+        // === DATE LOCK LOGIC ===
+        function isDateLocked(dayId) {
+            const today = new Date();
+            const currentYear = today.getFullYear(); 
+            const currentMonth = today.getMonth(); 
+            const currentDate = today.getDate();
+
+            // Logic: 2026 se pehle ya Feb mein date se pehle lock rahe
+            if (currentYear < 2026) return true;
+            if (currentYear === 2026 && currentMonth < 1) return true; // Before Feb
+            if (currentYear === 2026 && currentMonth === 1 && currentDate < dayId) return true; // In Feb, before date
+            
+            return false;
+        }
+
+        // === SYSTEM LOGIC ===
+        const menuScreen = document.getElementById('menu-screen');
+        const letterScreen = document.getElementById('letter-screen');
+        const env = document.getElementById('env');
+        const card = document.getElementById('finalLetter');
+        const audio = document.getElementById('bgMusic');
+        let currentData = null;
+        let isPlaying = false;
+        let typeInterval;
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            document.getElementById("love-timer").innerText = `Together since 8 Apr 2025: ${days}d ${hours}h ${minutes}m ${seconds}s ❤️`;
+        }
+        setInterval(updateTimer, 1000);
+
+        const grid = document.getElementById('grid');
+        days.forEach((day, index) => {
+            let div = document.createElement('div');
+            div.className = 'card';
+            let lockIcon = isDateLocked(day.id) ? '<span class="locked-badge">🔒</span>' : '';
+            div.innerHTML = `${lockIcon}<span class="icon">${day.icon}</span><b>${day.name}</b><small>${day.date}</small>`;
+            div.onclick = () => loadDay(index);
+            grid.appendChild(div);
+        });
+
+        function loadDay(index) {
+            currentData = days[index];
+            
+            // --- POPUP CHECK ---
+            if (isDateLocked(currentData.id)) {
+                showPopup(`Ye din (${currentData.date}) abhi nahi aaya hai.<br>Sabar ka phal meetha hota hai meri jaan! ❤️`);
+                return;
+            }
+
+            document.documentElement.style.setProperty('--highlight', currentData.color);
+            document.documentElement.style.setProperty('--envelope-main', currentData.color);
+            document.documentElement.style.setProperty('--envelope-flap', adjustColor(currentData.color, -20));
+            
+            document.getElementById('day-title').innerText = currentData.title;
+            document.getElementById('day-photo').src = currentData.image;
+            document.getElementById('typewriter-text').innerText = "";
+            
+            menuScreen.style.display = 'none';
+            letterScreen.style.display = 'flex';
+            env.style.display = 'block';
+            env.classList.remove('open');
+            card.classList.remove('show');
+        }
+
+        function openEnvelope() {
+            env.classList.add('open');
+            setTimeout(() => {
+                env.style.display = 'none';
+                card.classList.add('show');
+                startTypewriter(currentData.msg);
+            }, 800);
+        }
+
+        function startTypewriter(text) {
+            const el = document.getElementById('typewriter-text');
+            el.innerText = "";
+            let i = 0;
+            clearInterval(typeInterval);
+            typeInterval = setInterval(() => {
+                if(i < text.length) { el.innerText += text.charAt(i); i++; } 
+                else { clearInterval(typeInterval); }
+            }, 50);
+        }
+
+        function goBack() {
+            letterScreen.style.display = 'none';
+            menuScreen.style.display = 'block';
+            clearInterval(typeInterval);
+        }
+
+        function toggleMusic() {
+            if(isPlaying) { audio.pause(); } else { audio.play(); }
+            isPlaying = !isPlaying;
+        }
+
+        function adjustColor(color, amount) {
+            return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+        }
+
+        setInterval(() => {
+            const h = document.createElement('div');
+            h.innerText = "❤"; h.className = "heart";
+            h.style.left = Math.random() * 100 + "vw";
+            h.style.fontSize = Math.random() * 20 + 10 + "px";
+            h.style.animationDuration = Math.random() * 3 + 4 + "s";
+            h.style.color = currentData ? currentData.color : "#ffb7c5";
+            document.getElementById('heartContainer').appendChild(h);
+            setTimeout(() => h.remove(), 6000);
+        }, 500);
+    </script>
+</body>
+</html>
+
