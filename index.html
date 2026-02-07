@@ -771,6 +771,11 @@
         const card = document.getElementById('finalLetter');
         const audio = document.getElementById('bgMusic');
         let currentData = null;
+        let isEnvelopeOpening = false;
+        // Global timers for cleanup
+        let proposeTimer1, proposeTimer2, proposeTypeInterval;
+        let vdayTimer1, vdayTimer2, vdayTimer3, vdayTimer4;
+        let kissTimer;
         let isPlaying = false;
         let typeInterval;
 
@@ -796,6 +801,7 @@
         });
 
         function loadDay(index) {
+            isEnvelopeOpening = false;
             currentData = days[index];
             
             // --- POPUP CHECK ---
@@ -834,6 +840,8 @@
         }
 
         function openEnvelope() {
+            if (isEnvelopeOpening) return;
+            isEnvelopeOpening = true;
             env.classList.add('open');
             setTimeout(() => {
                 try { burstConfetti(); } catch(e) { console.log("Confetti error", e); }
@@ -893,6 +901,17 @@
         function goBack() {
             letterScreen.style.display = 'none';
             menuScreen.style.display = 'block';
+            
+            // Clear all timers to prevent overlapping text
+            clearTimeout(proposeTimer1);
+            clearTimeout(proposeTimer2);
+            clearInterval(proposeTypeInterval);
+            clearTimeout(vdayTimer1);
+            clearTimeout(vdayTimer2);
+            clearTimeout(vdayTimer3);
+            clearTimeout(vdayTimer4);
+            clearTimeout(kissTimer);
+
             clearInterval(typeInterval);
             document.removeEventListener('click', placeKiss); // Cleanup kiss mode
             document.body.style.cursor = "default";
@@ -1018,9 +1037,9 @@
 
         // === PROPOSE DAY SEQUENCE ===
         const PROPOSE_CONFIG = {
-            silenceDuration: 15000, // 6s silence
+            silenceDuration: 6000, // 6s silence
             courageTypingSpeed: 80, // Slow typing
-            pauseAfterCourage: 9000, // 2s pause
+            pauseAfterCourage: 2000, // 2s pause
         };
 
         function handleProposeDaySequence() {
@@ -1039,7 +1058,7 @@
             msgBox.innerHTML = '';
 
             // 1. Silence Phase
-            setTimeout(() => {
+            proposeTimer1 = setTimeout(() => {
                 // 2. Courage Line
                 const courageText = "Some questions need courage… not answers.";
                 const courageEl = document.createElement('div');
@@ -1047,14 +1066,14 @@
                 msgBox.appendChild(courageEl);
 
                 let i = 0;
-                const typeInterval = setInterval(() => {
+                proposeTypeInterval = setInterval(() => {
                     courageEl.textContent += courageText.charAt(i);
                     i++;
                     if (i >= courageText.length) {
-                        clearInterval(typeInterval);
+                        clearInterval(proposeTypeInterval);
                         
                         // 3. Pause
-                        setTimeout(() => {
+                        proposeTimer2 = setTimeout(() => {
                             // 4. Proposal Reveal
                             const finalEl = document.createElement('div');
                             finalEl.className = 'proposal-final';
@@ -1453,7 +1472,7 @@
                 kissStartTime = Date.now();
                 
                 // Add global listener for the "First Tap"
-                setTimeout(() => {
+                kissTimer = setTimeout(() => {
                     document.addEventListener('click', handleKissTrigger, { once: true });
                     document.addEventListener('touchstart', handleKissTrigger, { once: true });
                 }, 300); // Increased delay to prevent accidental triggers
@@ -1559,10 +1578,10 @@
             stage.innerHTML = ''; // Ensure empty
 
             // 2. Listening Phase
-            setTimeout(() => {
+            vdayTimer1 = setTimeout(() => {
                 showVDayLine(stage, "I noticed everything.");
                 
-                setTimeout(() => {
+                vdayTimer2 = setTimeout(() => {
                     triggerReflections(stage);
                 }, VDAY_CONFIG.reflectionDelay);
             }, VDAY_CONFIG.listeningDuration);
@@ -1616,7 +1635,7 @@
             showVDayLine(container, reflection);
 
             // 4. Final Sentence Completion
-            setTimeout(() => {
+            vdayTimer3 = setTimeout(() => {
                 container.innerHTML = ''; // Clear
                 
                 const sentence = document.createElement('div');
@@ -1624,7 +1643,7 @@
                 sentence.innerText = "With you, everything feels...";
                 container.appendChild(sentence);
 
-                setTimeout(() => {
+                vdayTimer4 = setTimeout(() => {
                     const word = document.createElement('div');
                     word.className = 'vday-final';
                     word.innerText = finalWord;
