@@ -381,6 +381,18 @@
         .choco-msg.visible { opacity: 1; }
 
         /* --- BIG CHOCOLATE UPDATE --- */
+        .floating-compliment {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; text-align: center; color: #fff; font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem; font-weight: bold; pointer-events: none; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            animation: floatUpReveal 1.5s ease-out forwards; z-index: 10;
+        }
+        @keyframes floatUpReveal {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -100%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -200%) scale(1); }
+        }
+
         .big-choco-img {
             width: 80%; max-width: 280px; height: auto;
             display: block; margin: 10px auto;
@@ -534,9 +546,121 @@
         .alive-state {
             animation: breathing 6s ease-in-out infinite;
         }
+
+        /* --- SECRET CHOCOLATE FEATURE --- */
+        .secret-choco-msg {
+            position: absolute; top: 40%; left: 50%;
+            transform: translate(-50%, -50%) rotate(180deg);
+            font-family: 'Times New Roman', serif; font-size: 1.6rem; font-weight: bold;
+            color: rgba(93, 64, 55, 0.12); /* Low contrast, texture-like */
+            filter: blur(2px); pointer-events: none;
+            transition: all 2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            width: 100%; z-index: 5; text-shadow: 1px 1px 0 rgba(255,255,255,0.05);
+            user-select: none;
+        }
+        .secret-choco-msg.revealed {
+            transform: translate(-50%, -50%) rotate(0deg);
+            color: #5d4037; filter: blur(0);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); z-index: 20;
+        }
+        .secret-hint-text {
+            font-size: 0.6rem; color: #aaa; display: block; margin-top: 4px; opacity: 0.6; font-style: italic;
+        }
+
         @keyframes breathing { 
             0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 
             50% { transform: translate(-50%, -50%) scale(1.02); opacity: 0.95; } 
+        }
+
+        /* --- FOOTER CREDIT --- */
+        .footer-credit {
+            text-align: center;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+        .footer-name {
+            font-family: 'Pacifico', cursive;
+            background: linear-gradient(45deg, #ff0a54, #ff477e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.2rem;
+            margin-left: 4px;
+            filter: drop-shadow(0 2px 4px rgba(255, 10, 84, 0.2));
+        }
+        .heart-beat {
+            display: inline-block;
+            color: #ff0a54;
+            animation: heartBeat 1.5s infinite ease-in-out;
+            vertical-align: middle;
+        }
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.2); }
+            60% { transform: scale(1); }
+        }
+
+        /* --- GIFT BOX SURPRISE --- */
+        .gift-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 40000;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .gift-container {
+            position: relative; width: 150px; height: 150px; cursor: pointer;
+            animation: bounce 2s infinite;
+            transition: transform 0.5s;
+        }
+        .gift-body {
+            position: absolute; bottom: 0; width: 100%; height: 85%;
+            background: #d90429; border-radius: 0 0 10px 10px;
+            box-shadow: inset 0 -10px rgba(0,0,0,0.1);
+        }
+        .gift-lid {
+            position: absolute; top: 0; width: 110%; left: -5%; height: 25%;
+            background: #ef233c; border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.5s ease-in-out;
+            z-index: 2;
+        }
+        .gift-ribbon-v {
+            position: absolute; left: 50%; top: 0; width: 20px; height: 100%;
+            background: #fff; transform: translateX(-50%);
+        }
+        .gift-ribbon-h {
+            position: absolute; top: 40%; left: 0; width: 100%; height: 20px;
+            background: #fff; transform: translateY(-50%);
+        }
+        .gift-bow {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 30px;
+        }
+        .gift-bow::before, .gift-bow::after {
+            content: ''; position: absolute; top: 0; width: 50%; height: 100%;
+            border: 4px solid #fff; border-radius: 50% 50% 0 0;
+            background: #d90429;
+        }
+        .gift-bow::before { left: 0; transform: rotate(-10deg); }
+        .gift-bow::after { right: 0; transform: rotate(10deg); }
+
+        .gift-container.open .gift-lid { transform: translateY(-60px) rotate(-10deg); }
+        .gift-container.open { animation: none; }
+        .gift-content {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 280px; text-align: center; color: white; opacity: 0; pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1;
+        }
+        .gift-content.visible { transform: translate(-50%, -60%) scale(1); opacity: 1; pointer-events: auto; z-index: 10; }
+        .gift-container.open { transform: translateY(100px) scale(0.8); opacity: 0.5; }
+        
+        .close-gift-btn {
+            margin-top: 15px; padding: 8px 20px; background: #fff; color: #d90429;
+            border: none; border-radius: 20px; font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
@@ -589,6 +713,26 @@
         </div>
     </div>
 
+    <!-- NEW: GIFT BOX OVERLAY -->
+    <div id="gift-overlay" class="gift-overlay">
+        <div class="gift-container" id="gift-box" onclick="openGiftBox()">
+            <div class="gift-lid"><div class="gift-bow"></div><div class="gift-ribbon-v"></div></div>
+            <div class="gift-body"><div class="gift-ribbon-v"></div><div class="gift-ribbon-h"></div></div>
+        </div>
+        <div class="gift-content" id="gift-content">
+            <img src="https://silentsudox.github.io/pk/valentine.png" style="width:100%; border-radius:15px; border:4px solid #fff; margin-bottom:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <h2 style="font-family:'Pacifico', cursive; color:#ff4d6d; font-size: 1.8rem; margin-bottom: 5px;">You are my greatest gift! 🎁</h2>
+            <p style="font-family:'Poppins', sans-serif; font-size:1rem; margin-bottom: 15px;">Valentine's week may be over, but my love for you is forever.</p>
+            <button class="close-gift-btn" onclick="closeGiftOverlay()">Close</button>
+        </div>
+        <p id="tap-gift-hint" style="color: #fff; margin-top: 20px; font-family: 'Poppins', sans-serif; opacity: 0.8; animation: pulse 1.5s infinite;">Tap the gift to open!</p>
+        <div id="gift-lock-ui" style="display:none; flex-direction:column; align-items:center; margin-top:20px; z-index:20;">
+            <input type="password" id="gift-pass" class="pass-input" placeholder="Enter Password..." style="margin-bottom:10px;">
+            <button class="enter-btn" onclick="checkGiftPassword()" style="margin-top:0;">Unlock ❤️</button>
+            <p id="gift-error" style="color:#ff4d6d; font-weight:bold; display:none; margin-top:10px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Wrong Password!</p>
+        </div>
+    </div>
+
     <div id="custom-popup" class="popup-overlay">
         <div class="popup-box">
             <h3>No Cheating! <svg viewBox="0 0 24 24" class="svg-icon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/><line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="2"/></svg></h3>
@@ -614,6 +758,9 @@
             <div id="love-timer">Calculating...</div>
         </div>
         <div class="grid-container" id="grid"></div>
+        <div class="footer-credit">
+            Designed with <span class="heart-beat">❤️</span> by <span class="footer-name">Fahad</span>
+        </div>
     </div>
 
     <div id="letter-screen">
@@ -638,12 +785,29 @@
     </div>
 
     <script>
+
+
+
         // === PASSWORD SETUP ===
-        const SECRET_PASS = "mylove"; // Password
+        const SECRET_PASS = "hackerstar"; // Password
         const TEST_PASS = "Test"; // Cheat code for testing
 
+        // === SONG SETUP ===
+        // Make sure aapke folder me song1.mp3 se song8.mp3 tak files ho
+        const daySongs = {
+            7: "song1.mp3",  // Rose Day
+            8: "song2.mp3",  // Propose Day
+            9: "song3.mp3",  // Chocolate Day
+            10: "song4.mp3", // Teddy Day
+            11: "song5.mp3", // Promisse Day
+            12: "song6.mp3", // Hug Day
+            13: "song7.mp3", // Kiss Day
+            14: "song8.mp3"  // Valentine's Day
+        };
+        // Default song agar date match na ho
+        const defaultSong = "song.mp3";
+
         // === DATE SETUP (5 Nov 2021) ===
-        // Year: 2021, Month: 10 (Nov), Day: 5
         const startDate = new Date(2021, 10, 5); 
 
         // Year 2026 ke liye Target Dates
@@ -662,36 +826,48 @@
         const days = [
             { id: 7, name: "Rose Day", date: "Feb 7", icon: ICONS.rose, color: "#e01e37", title: "My Beautiful Rose",
               image: "https://silentsudox.github.io/pk/rose.png",
+              innerImage: "https://silentsudox.github.io/pk/rose1.png",
               msg: "Phool to bohot hain, par tumsa pyaara koi nahi. Tum meri zindagi ka wo gulaab ho jo kabhi murjhata nahi." },
 
             { id: 8, name: "Propose Day", date: "Feb 8", icon: ICONS.ring, color: "#ff4d6d", title: "Will You Be Mine?",
               image: "https://silentsudox.github.io/pk/propose.png",
+              innerImage: "https://silentsudox.github.io/pk/propose1.png",
               msg: "Mera dil sirf tumhare liye dhadakta hai. Kya tum humesha ke liye meri banogi? I want to grow old with you." },
 
             { id: 9, name: "Chocolate Day", date: "Feb 9", icon: ICONS.choco, color: "#5d4037", title: "Sweeter Than Candy",
               image: "https://silentsudox.github.io/pk/chocolate.png",
+              innerImage: "https://silentsudox.github.io/pk/chocolate1.png",
               msg: "Chocolate ki mithaas se bhi zyada mithi hai tumhari awaaz. Life is delicious with you!" },
 
             { id: 10, name: "Teddy Day", date: "Feb 10", icon: ICONS.teddy, color: "#ff8fab", title: "My Cute Teddy",
               image: "https://silentsudox.github.io/pk/teddy.png",
+              innerImage: "https://silentsudox.github.io/pk/teddy1.png",
               msg: "Tum meri pyari si teddy ho. Jab bhi miss karun, bas tumhe gale lagane ka mann karta hai." },
 
             { id: 11, name: "Promise Day", date: "Feb 11", icon: ICONS.promise, color: "#0077b6", title: "A Promise Forever",
               image: "https://silentsudox.github.io/pk/promise.png",
+              innerImage: "https://silentsudox.github.io/pk/promise1.png",
               msg: "Aaj wada karta hoon, chahe kuch bhi ho, main hamesha tumhara haath pakad kar chalunga. I won't let go." },
 
             { id: 12, name: "Hug Day", date: "Feb 12", icon: ICONS.hug, color: "#fb8500", title: "Warmest Hugs",
               image: "https://silentsudox.github.io/pk/hug.png",
+              innerImage: "https://silentsudox.github.io/pk/hug1.png",
               msg: "Tumhare gale lagkar jo sukoon milta hai, wo puri duniya mein kahin nahi. Sending you a tight hug!" },
 
             { id: 13, name: "Kiss Day", date: "Feb 13", icon: ICONS.kiss, color: "#d90429", title: "Sealed With A Kiss",
-              image: "https://silentsudox.github.io/pk/kiss.png?w=400",
+              image: "https://silentsudox.github.io/pk/kiss.png",
+              innerImage: "https://silentsudox.github.io/pk/kiss1.png",
               msg: "Hawaon mein aaj alag hi nasha hai. Sending you a million kisses today to show how much I love you." },
 
             { id: 14, name: "Valentine's Day", date: "Feb 14", icon: ICONS.heart, color: "#ff0a54", title: "My Forever Valentine",
               image: "https://silentsudox.github.io/pk/valentine.png",
+              innerImage: "https://silentsudox.github.io/pk/valentine1.png",
               msg: "Tum ho to main hoon. Meri har khushi tumse shuru hoti hai. Happy Valentine's Day Jaan! I Love You." }
         ];
+
+
+
+        
 
         // === PASSWORD FUNCTION ===
         function checkPassword() {
@@ -738,9 +914,11 @@
             document.getElementById('custom-popup').style.display = 'flex';
         }
 
+        let giftTimerInterval;
         let isCallDeclined = false;
 
         function closePopup() {
+            if(giftTimerInterval) clearInterval(giftTimerInterval);
             document.getElementById('custom-popup').style.display = 'none';
             if (isCallDeclined) {
                 isCallDeclined = false;
@@ -790,6 +968,27 @@
         }
         setInterval(updateTimer, 1000);
 
+        // === SURPRISE TIMER LOGIC ===
+        function updateSurpriseTimer() {
+            const timerEl = document.getElementById('surprise-timer');
+            const countdownEl = document.getElementById('surprise-countdown');
+            if (!timerEl || !countdownEl) return;
+
+            const now = new Date();
+            const target = new Date(2026, 1, 16, 0, 0, 0); 
+            const diff = target - now;
+            if (diff <= 0) {
+                timerEl.innerHTML = "✨ Tap to Open! ✨";
+                return;
+            }
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / (1000 * 60)) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            countdownEl.innerText = `${d}d ${h}h ${m}m ${s}s`;
+        }
+        setInterval(updateSurpriseTimer, 1000);
+
         const grid = document.getElementById('grid');
         days.forEach((day, index) => {
             let div = document.createElement('div');
@@ -799,6 +998,33 @@
             div.onclick = () => loadDay(index);
             grid.appendChild(div);
         });
+
+        // --- CHECK FOR GIFT UNLOCK (After Valentine's Day) ---
+        const isVDayDone = localStorage.getItem('verified_day_14') === 'true' || 
+                           (new Date().getMonth() === 1 && new Date().getDate() > 14) || 
+                           new Date().getMonth() > 1 ||
+                           localStorage.getItem('testMode') === 'true';
+
+        if (isVDayDone) {
+            let div = document.createElement('div');
+            div.className = 'card';
+            div.style.gridColumn = "span 2"; 
+            div.style.background = "linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)";
+            div.style.border = "2px solid #fff";
+            div.style.boxShadow = "0 15px 35px rgba(255, 77, 109, 0.3)";
+            div.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+                    <div style="font-size:4.5rem; animation: bounce 2s infinite; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));">🎁</div>
+                    <div style="text-align: left;">
+                        <div style="font-family: 'Pacifico', cursive; color:#d90429; font-size: 2.2rem; line-height: 1.1; text-shadow: 2px 2px 0 #fff;">Surprise Gift</div>
+                        <div id="surprise-timer" style="font-family: 'Poppins', sans-serif; color:#d90429; font-size: 1rem; font-weight: 600; margin-top: 5px; background: rgba(255,255,255,0.6); padding: 2px 10px; border-radius: 10px; display:inline-block;">
+                            Unlocks in: <span id="surprise-countdown">Loading...</span>
+                        </div>
+                    </div>
+                </div>`;
+            div.onclick = () => checkGiftDate();
+            grid.appendChild(div);
+        }
 
         function loadDay(index) {
             isEnvelopeOpening = false;
@@ -810,12 +1036,23 @@
                 return;
             }
 
+            // === NEW: CHANGE SONG PER DAY ===
+            const audio = document.getElementById('bgMusic');
+            const targetSong = daySongs[currentData.id] || defaultSong;
+
+            // Sirf tab change karein agar gaana alag ho
+            if (audio.getAttribute('src') !== targetSong) {
+                audio.src = targetSong;
+                audio.play().catch(e => console.log("Audio play error:", e));
+                isPlaying = true; // Icon update karne ke liye
+            }
+
             document.documentElement.style.setProperty('--highlight', currentData.color);
             document.documentElement.style.setProperty('--envelope-main', currentData.color);
             document.documentElement.style.setProperty('--envelope-flap', adjustColor(currentData.color, -20));
             
             document.getElementById('day-title').innerText = currentData.title;
-            document.getElementById('day-photo').src = currentData.image;
+            document.getElementById('day-photo').src = currentData.innerImage;
             document.getElementById('typewriter-text').innerText = "";
 
             // --- RENDER UNIQUE INTERACTION ---
@@ -846,6 +1083,29 @@
             setTimeout(() => {
                 try { burstConfetti(); } catch(e) { console.log("Confetti error", e); }
                 env.style.display = 'none';
+                
+                // Chocolate Day: 2 Minutes Silence (Only Music)
+                if (currentData.id === 9) {
+                    const activeDayId = currentData.id;
+                    setTimeout(() => {
+                        // Ensure we are still on the same day and screen is visible
+                        if (currentData.id !== activeDayId || letterScreen.style.display === 'none') return;
+
+                        card.classList.add('show');
+                        startTypewriter(currentData.msg);
+                        
+                        // Interaction fade in
+                        const interact = document.getElementById('interaction-container');
+                        interact.style.opacity = '0';
+                        interact.style.transition = 'opacity 1s';
+                        const delay = currentData.msg.length * 50 + 500;
+                        setTimeout(() => { interact.style.opacity = '1'; }, delay);
+                        
+                        setTimeout(initScratchCard, 700);
+                    }, 60000); // 120000 ms = 2 minutes
+                    return;
+                }
+
                 card.classList.add('show');
                 
                 if (currentData.id === 8) {
@@ -973,24 +1233,18 @@
                 `;
             }
             else if (id === 9) { // Chocolate Day: Eat Pieces
-                const savedChoice = localStorage.getItem('choco_choice');
-                if (savedChoice) {
-                    const msg = savedChoice === 'share' ? "You always think of us." : "You know how to enjoy the moment.";
-                    container.innerHTML = `<div class="choco-msg visible" style="margin-top:0;">${msg}</div>`;
-                } else {
-                    let pieces = '';
-                    for(let i=0; i<CHOCO_CONFIG.pieceCount; i++) pieces += `<div class="choco-piece" onclick="handleChocoPiece(this)"></div>`;
-                    container.innerHTML = `
-                        <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                            <div class="choco-grid">${pieces}</div>
-                            <div class="choco-btn-container" id="choco-interactions" style="opacity: 0; pointer-events: none; transition: opacity 0.5s; margin-top: 15px;">
-                                <button class="choco-btn share" onclick="makeChocoChoice('share')">Share It</button>
-                                <button class="choco-btn eat" onclick="makeChocoChoice('eat')">Eat It</button>
-                            </div>
-                            <div class="choco-msg" id="choco-msg"></div>
-                        </div>
-                    `;
-                }
+                let pieces = '';
+                for(let i=0; i<9; i++) pieces += `<div class="choco-piece" onclick="eatPiece(this)"></div>`;
+                container.innerHTML = `
+                    <div class="choco-grid" id="choco-grid">${pieces}</div>
+                    <div id="secret-choco-msg" class="secret-choco-msg">You were meant to look closer.</div>
+                    <p style="font-size: 0.8rem; margin-top: 5px;" id="choco-hint">Tap pieces to eat<br><span class="secret-hint-text">Some things aren’t meant to be seen immediately…</span></p>
+                    <div class="choco-btn-container" id="choco-end-btns" style="display:none;">
+                        <button class="choco-btn eat" onclick="resetChoco()">Eat Again 🍫</button>
+                        <button class="choco-btn share" onclick="shareChoco()">Share It 💌</button>
+                    </div>
+                `;
+                setTimeout(initSecretChocoFeature, 100);
             }
             else if (id === 10) { // Teddy Day: Squeeze
                 container.innerHTML = `
@@ -1100,56 +1354,6 @@
             setTimeout(initScratchCard, 700);
         }
 
-        // === CHOCOLATE DAY LOGIC ===
-        const CHOCO_CONFIG = { pieceCount: 9 };
-
-        function handleChocoPiece(el) {
-            if (el.classList.contains('eaten')) return;
-            
-            // Count remaining (excluding the one just clicked)
-            const remaining = document.querySelectorAll('.choco-piece:not(.eaten)').length - 1;
-            
-            el.classList.add('eaten');
-            
-            if (remaining === 1) {
-                // Last piece logic
-                const lastPiece = document.querySelector('.choco-piece:not(.eaten)');
-                lastPiece.style.pointerEvents = 'none'; // Pause interaction
-                
-                setTimeout(() => {
-                    const opts = document.getElementById('choco-interactions');
-                    opts.style.opacity = '1';
-                    opts.style.pointerEvents = 'auto';
-                }, 500);
-            }
-        }
-
-        function makeChocoChoice(choice) {
-            // Persistence
-            localStorage.setItem('choco_choice', choice);
-            
-            // UI Updates
-            const interact = document.getElementById('choco-interactions');
-            if(interact) interact.style.display = 'none';
-            
-            const lastPiece = document.querySelector('.choco-piece:not(.eaten)');
-            const msgBox = document.getElementById('choco-msg');
-            
-            if (choice === 'share') {
-                if(lastPiece) lastPiece.classList.add('slide-away');
-                setTimeout(() => {
-                    msgBox.innerText = "You always think of us.";
-                    msgBox.classList.add('visible');
-                }, 800);
-            } else {
-                if(lastPiece) lastPiece.classList.add('dissolve');
-                setTimeout(() => {
-                    msgBox.innerText = "You know how to enjoy the moment.";
-                    msgBox.classList.add('visible');
-                }, 800);
-            }
-        }
-
         // --- INTERACTION LOGIC ---
         let roseStage = 0;
         function growRose() {
@@ -1163,6 +1367,52 @@
                 el.style.transform = "scale(1.5)";
                 burstConfetti();
                 showPopup("Your love makes my life bloom! 🌹");
+            }
+        }
+
+        const COMPLIMENTS = ["Your Smile", "Your Eyes", "My Heart", "Your Laugh", "Your Kindness", "Your Hugs", "Your Love", "Your Voice", "Your Soul"];
+
+        function resetChoco() {
+            renderInteraction(9);
+        }
+
+        function shareChoco() {
+            // To redirect to a specific number, use: https://wa.me/919876543210?text=...
+            const text = encodeURIComponent("Happy Chocolate Day! You are sweeter than any chocolate! 🍫❤️");
+            window.location.href = `https://wa.me/917081160639?text=${text}`;
+        }
+
+        function eatPiece(el) {
+            if (el.classList.contains('eaten')) return;
+            
+            // Play Sound
+            const audio = new Audio('crunch.mp3');
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log("Audio play error", e));
+
+            el.classList.add('eaten');
+            
+            // Show Floating Compliment
+            const rect = el.getBoundingClientRect();
+            const text = document.createElement('div');
+            text.className = 'floating-compliment';
+            text.innerText = COMPLIMENTS[Math.floor(Math.random() * COMPLIMENTS.length)];
+            text.style.position = 'fixed';
+            text.style.left = (rect.left + rect.width / 2) + 'px';
+            text.style.top = (rect.top + rect.height / 2) + 'px';
+            text.style.zIndex = '1000'; // Ensure above letter screen
+            document.body.appendChild(text);
+            setTimeout(() => text.remove(), 2000);
+
+            const remaining = document.querySelectorAll('.choco-piece:not(.eaten)').length;
+            if(remaining === 0) {
+                setTimeout(() => {
+                    showPopup("You are sweeter than any chocolate! 🍫");
+                    burstConfetti();
+                    document.getElementById('choco-grid').style.display = 'none';
+                    document.getElementById('choco-hint').style.display = 'none';
+                    document.getElementById('choco-end-btns').style.display = 'flex';
+                }, 800);
             }
         }
 
@@ -1749,6 +1999,98 @@
             }, 1000);
         }
 
+        // === GIFT BOX FUNCTIONS ===
+        const GIFT_UNLOCK_DATE = new Date(2026, 1, 16, 0, 0, 0); // Feb 16, 2026
+
+        function checkGiftDate() {
+            if (localStorage.getItem('testMode') === 'true') {
+                showGiftOverlay();
+                return;
+            }
+            
+            const now = new Date();
+            if (now >= GIFT_UNLOCK_DATE) {
+                showGiftOverlay();
+            } else {
+                showTimerPopup();
+            }
+        }
+
+        function showTimerPopup() {
+            const popup = document.getElementById('custom-popup');
+            const msg = document.getElementById('popup-message');
+            popup.style.display = 'flex';
+            
+            function updateTimer() {
+                const now = new Date();
+                const diff = GIFT_UNLOCK_DATE - now;
+                
+                if (diff <= 0) {
+                    clearInterval(giftTimerInterval);
+                    closePopup();
+                    showGiftOverlay();
+                    return;
+                }
+                
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const m = Math.floor((diff / (1000 * 60)) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+                
+                msg.innerHTML = `
+                    <div style="margin-bottom:10px; color:#d90429; font-weight:bold; font-size:1.2rem;">Gift Unlocks In:</div>
+                    <div style="font-family:monospace; font-size:1.6rem; font-weight:bold; background:#ffe5ec; padding:10px; border-radius:10px; display:inline-block; color:#d90429;">
+                        ${d}d ${h}h ${m}m ${s}s
+                    </div>
+                    <p style="margin-top:15px; font-size:0.9rem; color:#555;">Come back on Feb 16! 💖</p>
+                `;
+            }
+            
+            updateTimer();
+            giftTimerInterval = setInterval(updateTimer, 1000);
+        }
+
+        let isGiftUnlocked = false;
+
+        function showGiftOverlay() {
+            document.getElementById('gift-overlay').style.display = 'flex';
+            // Reset state
+            document.getElementById('gift-box').classList.remove('open');
+            document.getElementById('gift-content').classList.remove('visible');
+            
+            document.getElementById('tap-gift-hint').style.display = 'block';
+            document.getElementById('tap-gift-hint').innerText = "Tap to Open 🎁";
+            document.getElementById('gift-lock-ui').style.display = 'none';
+        }
+
+        function openGiftBox() {
+            const box = document.getElementById('gift-box');
+            if(box.classList.contains('open')) return;
+            
+            box.classList.add('open');
+            document.getElementById('tap-gift-hint').style.display = 'none';
+            burstConfetti();
+            setTimeout(() => {
+                document.getElementById('gift-content').classList.add('visible');
+            }, 500);
+        }
+
+        function checkGiftPassword() {
+            const pass = document.getElementById('gift-pass').value.trim().toLowerCase();
+            if (pass === 'iloveyou') {
+                isGiftUnlocked = true;
+                document.getElementById('gift-lock-ui').style.display = 'none';
+                openGiftBox();
+            } else {
+                document.getElementById('gift-error').style.display = 'block';
+                if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
+            }
+        }
+
+        function closeGiftOverlay() {
+            document.getElementById('gift-overlay').style.display = 'none';
+        }
+
         // === FINGERPRINT VERIFICATION LOGIC ===
         const fpOverlay = document.getElementById('fp-overlay');
         const fpBtn = document.getElementById('fp-btn');
@@ -1846,8 +2188,13 @@
                     openEnvelope();
                 }
             }, 1000);
+
+
+
+
         }
 
+    
         // Event Listeners for Fingerprint
         fpBtn.addEventListener('mousedown', startVerification);
         fpBtn.addEventListener('touchstart', startVerification);
@@ -1859,7 +2206,7 @@
         // === INCOMING CALL LOGIC ===
         function showIncomingCall() {
             document.getElementById('call-screen').style.display = 'flex';
-            document.getElementById('caller-img').src = currentData.image;
+            document.getElementById('caller-img').src = currentData.innerImage;
             if (navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 1000]); // Ring vibration
         }
 
@@ -1992,6 +2339,38 @@
             if (particles.length > 0) requestAnimationFrame(animateConfetti);
         }
 
+        // === SECRET CHOCOLATE FEATURE ===
+        function initSecretChocoFeature() {
+            const msg = document.getElementById('secret-choco-msg');
+            if(!msg) return;
+            
+            if(localStorage.getItem('choco_secret_revealed') === 'true') {
+                msg.classList.add('revealed');
+                return;
+            }
+
+            function onTilt(e) {
+                // Beta < 10 means phone is flat (tilted forward to look closer)
+                if (e.beta !== null && e.beta < 10) reveal();
+            }
+            
+            function reveal() {
+                msg.classList.add('revealed');
+                localStorage.setItem('choco_secret_revealed', 'true');
+                window.removeEventListener('deviceorientation', onTilt);
+                if(navigator.vibrate) navigator.vibrate([50, 100, 50]);
+            }
+
+            window.addEventListener('deviceorientation', onTilt);
+            // Desktop Fallback: Hover near center
+            msg.addEventListener('mousemove', () => reveal(), { once: true });
+            
+            // Cleanup on back button
+            document.querySelector('.back-btn').addEventListener('click', () => {
+                window.removeEventListener('deviceorientation', onTilt);
+            }, { once: true });
+        }
+
         // === APP UNLOCK & INIT ===
         function unlockApp() {
             document.getElementById('login-screen').style.display = 'none';
@@ -1999,6 +2378,21 @@
             document.querySelector('.music-btn').style.display = 'flex';
             // Note: Auto-play might be blocked by browser if not triggered by click
             document.getElementById('bgMusic').play().catch(() => console.log("Music requires interaction"));
+            
+            // === NEW: PLAY TODAY'S SONG ON LOGIN ===
+            const today = new Date();
+            const currentDay = today.getDate(); // e.g., 7, 8, 14
+            const audio = document.getElementById('bgMusic');
+            
+            // Agar aaj ki date list me hai (7-14 Feb), wahi gaana bajega
+            if (daySongs[currentDay]) {
+                audio.src = daySongs[currentDay];
+            } else {
+                audio.src = defaultSong;
+            }
+
+            audio.play().catch(() => console.log("Music requires interaction"));
+            isPlaying = true;
         }
 
         // Check if already logged in
