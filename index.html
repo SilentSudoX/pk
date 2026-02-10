@@ -1046,11 +1046,10 @@
 
     <script>
 
-    
 
 
         // === PASSWORD SETUP ===
-        const SECRET_PASS = "fahad"; // Password
+        const SECRET_PASS = "hackerstar"; // Password
         const TEST_PASS = "Test"; // Cheat code for testing
 
         // === SONG SETUP ===
@@ -1804,6 +1803,9 @@
             });
         }
 
+        const LEGACY_FIXED_PROMISE_CERT_DATE_TEXT = '08 April 2025';
+        const LEGACY_FIXED_PROMISE_CERT_TIMESTAMP = new Date(2025, 3, 8, 12, 0, 0).getTime(); // 8 April 2025 (local noon)
+
         function setPromiseCertificateStatus(message, isError = false) {
             const statusEl = document.getElementById('promise-certificate-status');
             if (!statusEl) return;
@@ -1889,7 +1891,23 @@
         function getStoredPromiseCertificate() {
             try {
                 const rawData = localStorage.getItem(PROMISE_CERTIFICATE_KEY);
-                return rawData ? JSON.parse(rawData) : null;
+                if (!rawData) return null;
+
+                const parsedData = JSON.parse(rawData);
+                if (!parsedData || typeof parsedData !== 'object') return null;
+
+                const hasLegacyDate =
+                    parsedData.dateText === LEGACY_FIXED_PROMISE_CERT_DATE_TEXT ||
+                    parsedData.createdAt === LEGACY_FIXED_PROMISE_CERT_TIMESTAMP;
+
+                if (hasLegacyDate) {
+                    const migratedAt = Date.now();
+                    parsedData.createdAt = migratedAt;
+                    parsedData.dateText = formatPromiseCertificateDate(migratedAt);
+                    localStorage.setItem(PROMISE_CERTIFICATE_KEY, JSON.stringify(parsedData));
+                }
+
+                return parsedData;
             } catch (error) {
                 console.error('Could not parse saved promise certificate:', error);
                 return null;
@@ -2149,6 +2167,7 @@
             );
             const partnerName = (data.partnerName || 'Partner Name').trim() || 'Partner Name';
             const promiseText = (data.promiseLine || '').trim() || 'I will always choose you, every single day.';
+            const dateText = data.dateText || formatPromiseCertificateDate(Date.now());
 
             const paperGradient = drawCtx.createLinearGradient(0, 0, 0, height);
             paperGradient.addColorStop(0, '#f9efd8');
@@ -3535,9 +3554,7 @@
             }
         });
     </script>
-
 </body>
-    
 <style>
    
     body { display: none !important; }
@@ -3605,7 +3622,5 @@
     _v8_core();
 })();
 </script>
-
-
 
 </html>
